@@ -11,15 +11,16 @@ db.once('open', function() {
   console.log('mongoose connected successfully');
 });
 
-var itemSchema = mongoose.Schema({
-  quantity: Number,
-  description: String
+var giphySchema = mongoose.Schema({
+  id: String,
+  slug: String,
+  embed_url: String
 });
 
-var Item = mongoose.model('Item', itemSchema);
+var Gif = mongoose.model('Gif', giphySchema);
 
 var selectAll = function(callback) {
-  Item.find({}, function(err, items) {
+  Gif.find({}, function(err, items) {
     if(err) {
       callback(err, null);
     } else {
@@ -28,4 +29,9 @@ var selectAll = function(callback) {
   });
 };
 
+var save = function(gifs) {
+  return Promise.all(gifs.map(gif => Gif.create(gif)));
+}
+
 module.exports.selectAll = selectAll;
+module.exports.save = save;
