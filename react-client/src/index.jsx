@@ -1,9 +1,7 @@
-// react-client
-
-import axios from 'axios';
+// import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import $ from 'jquery';
+import $ from 'jquery';
 import List from './components/List.jsx';
 import Search from './components/Search.jsx';
 
@@ -29,23 +27,34 @@ class App extends React.Component {
   handleSearch() {
     console.log(`${this.state.term} was searched`);
 
-    axios.post('/gifs', {search: this.state.term})
-    .then(() => this.getGifs());
+    $.ajax({
+      type: "POST",
+      url: "/gifs",
+      data: {query: this.state.term},
+
+      success: function() {
+        console.log('success!')
+      },
+      error: function(error) {
+        console.log('error from handleSearch!', error)
+      }
+    });
+
   }
 
-  componentDidMount() {
-    this.getGifs();
-  }
+  // componentDidMount() {
+  //   this.getGifs();
+  // }
 
-  getGifs() {
-    axios.get('/gifs')
-    .then(response => this.setState({gifs: response.data}))
-    .catch(err => console.log('error! ', err));
-  }
+  // getGifs() {
+  //   axios.get('/gifs')
+  //   .then(response => this.setState({gifs: response.data}))
+  //   .catch(err => console.log('error from getGifs!', err));
+  // }
 
   render () {
     return (<div>
-      <h1>GIF me!</h1>
+      <h1><strong>GIF</strong>eelMe</h1>
       <Search handleSearch={this.handleSearch} handleChange={this.handleChange}/>
       <List gifs={this.state.gifs}/>
     </div>)
