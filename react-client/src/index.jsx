@@ -13,7 +13,6 @@ class App extends React.Component {
       query: '',
       gifs: [],
       favorites: [],
-      favoriteGif: '',
       userComment: '',
     }
 
@@ -21,7 +20,6 @@ class App extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
     this.handleComment = this.handleComment.bind(this);
-    this.setFavoriteGif = this.setFavoriteGif.bind(this);
   }
 
   handleChange(event) {
@@ -58,10 +56,6 @@ class App extends React.Component {
     console.log('handleComment:', this.state.userComment);
   }
 
-  setFavoriteGif() {
-    this.setState
-  }
-
   handleFavoriteClick(gif) {
     console.log(`${this.state.query} was searched`);
     $('#commentInput').val('');
@@ -72,7 +66,12 @@ class App extends React.Component {
       slug: gif.slug,
       embed_url: gif.embed_url
     })
-    .then(response => console.log('handleFaveClick response: ', response))
+    .then(response => {
+      this.setState({
+        favorites: response.data
+      });
+      console.log('handleFaveClick faves: ', this.state.favorites);
+    })
     .catch(err => console.log('error from handleFaveClick: ', err))
   }
 
@@ -90,10 +89,17 @@ class App extends React.Component {
 
   render () {
     return (<div>
+      <rb.Jumbotron id="jumbo">
       <h1><em>GIF</em>eelMe</h1>
-
       <Search handleSearch={this.handleSearch} handleChange={this.handleChange}/>
-      <List handleComment={this.handleComment} setFavoriteGif={this.setFavoriteGif} handleFavoriteClick={this.handleFavoriteClick} gifs={this.state.gifs}/>
+      </rb.Jumbotron>
+      <div class="col-sm-6" id="left">
+        <List handleComment={this.handleComment}handleFavoriteClick={this.handleFavoriteClick} gifs={this.state.gifs}/>
+      </div>
+
+      <div class="col-sm-6" id="right">
+        <Favorites favorites={this.state.favorites}/>
+      </div>
     </div>)
   }
 }
