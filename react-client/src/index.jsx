@@ -12,25 +12,25 @@ class App extends React.Component {
     this.state = {
       query: '',
       gifs: [],
-      favoritedGifs: [],
-      userComment: ''
+      favoritedGif: '',
+      userComment: '',
     }
 
-    this.context = this;
     this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleFavoriteGif = this.handleFavoriteGif.bind(this);
+    this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
+    this.handleComment = this.handleComment.bind(this);
   }
 
   handleChange(event) {
     this.setState({
       query: event.target.value
     });
-    console.log('handleChange query:', this.state.query);
   }
 
   handleSearch() {
     console.log(`${this.state.query} was searched`);
+    $('#queryInput').val('');
 
     $.ajax({
       type: "POST",
@@ -42,6 +42,7 @@ class App extends React.Component {
           gifs: data
         })
         console.log('successful gifs:', this.state.gifs)
+
       }.bind(this),
       error: function(error) {
         console.log('error from handleSearch!', error)
@@ -49,7 +50,14 @@ class App extends React.Component {
     });
   }
 
-  handleFavoriteGif(event) {
+  handleComment(event) {
+    this.setState({
+      userComment: event.target.value
+    })
+    console.log('handleComment:', this.state.userComment);
+  }
+
+  handleFavoriteClick(event) {
     console.log('hi from favoriteGifHandler: ', event)
   }
 
@@ -66,8 +74,9 @@ class App extends React.Component {
   render () {
     return (<div>
       <h1>GIFeelMe</h1>
+
       <Search handleSearch={this.handleSearch} handleChange={this.handleChange}/>
-      <List handleFavoriteGif={this.handleFavoriteGif} gifs={this.state.gifs}/>
+      <List handleComment={this.handleComment} handleFavoriteClick={this.handleFavoriteClick} gifs={this.state.gifs}/>
     </div>)
   }
 }
