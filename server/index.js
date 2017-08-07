@@ -16,13 +16,22 @@ app.post('/gifs', function(req, res) {
   giphyHelper.getGifsByQuery(query)
   .then(response => {
     let gifs = response.data.data;
-    mongo.save(gifs, query);
+    // mongo.save(gifs, query);
     res.send(gifs);
   })
-  .catch(err => console.log('error from server index!', error))
+  .catch(err => console.log('error from server index!', err))
 })
 
-
+app.post('/favorite', function(req, res) {
+  console.log('req from FAVORITE post!', req.body)
+  var favorite = req.body;
+  mongo.save(favorite)
+  .then(() => mongo.selectAll)
+  .then(response => {
+    console.log('response after selectAll', response)
+  })
+  .catch(err => console.log('error from post favorite server', err))
+})
 
 //stock :
 app.get('/gifs', function (req, res) {

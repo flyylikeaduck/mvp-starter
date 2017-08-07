@@ -12,7 +12,8 @@ class App extends React.Component {
     this.state = {
       query: '',
       gifs: [],
-      favoritedGif: '',
+      favorites: [],
+      favoriteGif: '',
       userComment: '',
     }
 
@@ -20,6 +21,7 @@ class App extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
     this.handleComment = this.handleComment.bind(this);
+    this.setFavoriteGif = this.setFavoriteGif.bind(this);
   }
 
   handleChange(event) {
@@ -41,8 +43,7 @@ class App extends React.Component {
         this.setState({
           gifs: data
         })
-        console.log('successful gifs:', this.state.gifs)
-
+        console.log(this.state.gifs)
       }.bind(this),
       error: function(error) {
         console.log('error from handleSearch!', error)
@@ -57,26 +58,42 @@ class App extends React.Component {
     console.log('handleComment:', this.state.userComment);
   }
 
-  handleFavoriteClick(event) {
-    console.log('hi from favoriteGifHandler: ', event)
+  setFavoriteGif() {
+    this.setState
   }
 
-  componentDidMount() {
-    this.getGifs();
+  handleFavoriteClick(gif) {
+    console.log(`${this.state.query} was searched`);
+    $('#commentInput').val('');
+
+    axios.post('/favorite', {
+      comment: this.state.userComment,
+      id: gif.id,
+      slug: gif.slug,
+      embed_url: gif.embed_url
+    })
+    .then(response => console.log('handleFaveClick response: ', response))
+    .catch(err => console.log('error from handleFaveClick: ', err))
   }
+
+  // componentDidMount() {
+  //   this.getGifs();
+  // }
 
   getGifs() {
-    axios.get('/gifs')
-    .then(response => this.setState({gifs: response.data}))
+    axios.get('/favorite')
+    .then(response => this.setState({
+      favorites: response.data
+    }))
     .catch(err => console.log('error from getGifs!', err));
   }
 
   render () {
     return (<div>
-      <h1>GIFeelMe</h1>
+      <h1><em>GIF</em>eelMe</h1>
 
       <Search handleSearch={this.handleSearch} handleChange={this.handleChange}/>
-      <List handleComment={this.handleComment} handleFavoriteClick={this.handleFavoriteClick} gifs={this.state.gifs}/>
+      <List handleComment={this.handleComment} setFavoriteGif={this.setFavoriteGif} handleFavoriteClick={this.handleFavoriteClick} gifs={this.state.gifs}/>
     </div>)
   }
 }
