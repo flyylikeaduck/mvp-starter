@@ -8,15 +8,10 @@ let getGifsByQuery = (query) => {
   let params = {
     'q': `${plusQuery}`,
     'api_key': `${config.TOKEN}`,
-    'limit': 10
+    'limit': 5
   }
 
-  axios.get('http://api.giphy.com/v1/gifs/search', {params})
-  .then(response => {
-    console.log('response data: ', response.data);
-    return response.data;
-  })
-  .catch(err => console.log('error from giffyHelper!'))
+  return axios.get('http://api.giphy.com/v1/gifs/search', {params});
 }
 
 module.exports.getGifsByQuery = getGifsByQuery;

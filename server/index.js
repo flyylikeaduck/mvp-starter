@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var mongo = require('../database-mongo');
+var mongo = require('../database-mongo/index');
 var axios = require('axios');
 var giphyHelper = require('../helpers/giphyHelper');
 var app = express();
@@ -14,11 +14,17 @@ app.post('/gifs', function(req, res) {
   var query = req.body.query;
   console.log('from server index: ', query);
   giphyHelper.getGifsByQuery(query)
+  .then(response => {
+    let gifs = response.data.data;
+    mongo.save(gifs, query);
+  })
+  .then(() => console.log('successful save!'))
+  .catch(err => console.log('error from server index!'))
 
   //res.send();
 })
 
-// stock :
+//stock :
 // app.get('/gifs', function (req, res) {
 //   mongo.selectAll(function(err, data) {
 //     if(err) {
