@@ -1,4 +1,4 @@
-// import axios from 'axios';
+import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
@@ -11,8 +11,10 @@ class App extends React.Component {
     this.state = {
       term: '',
       gifs: []
+
     }
 
+    this.context = this;
     this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
   }
@@ -24,17 +26,30 @@ class App extends React.Component {
     console.log('handleChange term:', this.state.term);
   }
 
+  updateGifs(data) {
+    this.setState({
+      gifs: data
+    })
+  }
+
   handleSearch() {
     console.log(`${this.state.term} was searched`);
+
+    // axios.get('/gifs')
 
     $.ajax({
       type: "POST",
       url: "/gifs",
       data: {query: this.state.term},
 
-      success: function() {
-        console.log('success!')
-      },
+      success: function(data) {
+        console.log('success in index.jsx!', data)
+        console.log('this in success', this)
+        this.setState({
+          gifs: data
+        })
+        console.log('please work!', this.state.gifs)
+      }.bind(this),
       error: function(error) {
         console.log('error from handleSearch!', error)
       }
@@ -42,15 +57,15 @@ class App extends React.Component {
 
   }
 
-  // componentDidMount() {
-  //   this.getGifs();
-  // }
+  componentDidMount() {
+    this.getGifs();
+  }
 
-  // getGifs() {
-  //   axios.get('/gifs')
-  //   .then(response => this.setState({gifs: response.data}))
-  //   .catch(err => console.log('error from getGifs!', err));
-  // }
+  getGifs() {
+    axios.get('/gifs')
+    .then(response => this.setState({gifs: response.data}))
+    .catch(err => console.log('error from getGifs!', err));
+  }
 
   render () {
     return (<div>

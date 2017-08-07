@@ -17,23 +17,23 @@ app.post('/gifs', function(req, res) {
   .then(response => {
     let gifs = response.data.data;
     mongo.save(gifs, query);
+    res.send(gifs);
   })
-  .then(() => console.log('successful save!'))
-  .catch(err => console.log('error from server index!'))
+  .catch(err => console.log('error from server index!', error))
 
   //res.send();
 })
 
 //stock :
-// app.get('/gifs', function (req, res) {
-//   mongo.selectAll(function(err, data) {
-//     if(err) {
-//       res.sendStatus(500);
-//     } else {
-//       res.json(data);
-//     }
-//   });
-// });
+app.get('/gifs', function (req, res) {
+  mongo.selectAll(function(err, data) {
+    if(err) {
+      res.sendStatus(500);
+    } else {
+      res.json(data);
+    }
+  });
+});
 
 app.listen(3000, function() {
   console.log('listening on port 3000!');
