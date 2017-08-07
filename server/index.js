@@ -26,23 +26,25 @@ app.post('/favorite', function(req, res) {
   console.log('req from FAVORITE post!', req.body)
   var favorite = req.body;
   mongo.save(favorite)
-  .then(() => mongo.selectAll)
-  .then(response => {
-    console.log('response after selectAll', response)
-  })
-  .catch(err => console.log('error from post favorite server', err))
+  .then(() => mongo.selectAll(function(err, data) {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.send(data);
+    }
+  }));
 })
 
 //stock :
-app.get('/gifs', function (req, res) {
-  mongo.selectAll(function(err, data) {
-    if(err) {
-      res.sendStatus(500);
-    } else {
-      res.json(data);
-    }
-  });
-});
+// app.get('/gifs', function (req, res) {
+//   mongo.selectAll(function(err, data) {
+//     if(err) {
+//       res.sendStatus(500);
+//     } else {
+//       res.json(data);
+//     }
+//   });
+// });
 
 app.listen(3000, function() {
   console.log('listening on port 3000!');

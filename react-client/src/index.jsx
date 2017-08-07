@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import List from './components/List.jsx';
 import Search from './components/Search.jsx';
-//import * as rb from 'react-bootstrap';
+import * as rb from 'react-bootstrap';
 
 class App extends React.Component {
   constructor(props) {

@@ -25,16 +25,14 @@ let giphySchema = mongoose.Schema({
 
 let Gif = mongoose.model('Gif', giphySchema);
 
-let selectAll = function() {
-  // Gif.find({}, function(err, items) {
-  //   if(err) {
-  //     callback(err, null);
-  //   } else {
-  //     callback(null, items);
-  //   }
-  // });
-
-  return Gif.find().exec();
+let selectAll = function(callback) {
+  Gif.find({}, function(err, items) {
+    if(err) {
+      callback(err, null);
+    } else {
+      callback(null, items);
+    }
+  });
 };
 
 let save = function(favorite) {
