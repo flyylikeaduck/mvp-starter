@@ -20,9 +20,9 @@ app.post('/gifs', function(req, res) {
     res.send(gifs);
   })
   .catch(err => console.log('error from server index!', error))
-
-  //res.send();
 })
+
+
 
 //stock :
 app.get('/gifs', function (req, res) {

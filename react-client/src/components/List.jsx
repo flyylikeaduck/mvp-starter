@@ -3,9 +3,8 @@ import ListItem from './ListItem.jsx';
 
 const List = (props) => (
   <div>
-    <h4> List Component </h4>
-    There are { props.gifs.length } gifs.
-    { props.gifs.map(gif => <ListItem gif={gif}/>)}
+    There are { props.gifs.length } gifs that match your mood.
+    { props.gifs.map(gif => <div key={gif.id}> <ListItem gif={gif} handleFavoriteGif={props.handleFavoriteGif}/> </div>)}
   </div>
 )
 

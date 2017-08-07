@@ -4,57 +4,53 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import List from './components/List.jsx';
 import Search from './components/Search.jsx';
+//import * as rb from 'react-bootstrap';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      term: '',
-      gifs: []
-
+      query: '',
+      gifs: [],
+      favoritedGifs: [],
+      userComment: ''
     }
 
     this.context = this;
     this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleFavoriteGif = this.handleFavoriteGif.bind(this);
   }
 
   handleChange(event) {
     this.setState({
-      term: event.target.value
+      query: event.target.value
     });
-    console.log('handleChange term:', this.state.term);
-  }
-
-  updateGifs(data) {
-    this.setState({
-      gifs: data
-    })
+    console.log('handleChange query:', this.state.query);
   }
 
   handleSearch() {
-    console.log(`${this.state.term} was searched`);
-
-    // axios.get('/gifs')
+    console.log(`${this.state.query} was searched`);
 
     $.ajax({
       type: "POST",
       url: "/gifs",
-      data: {query: this.state.term},
+      data: {query: this.state.query},
 
       success: function(data) {
-        console.log('success in index.jsx!', data)
-        console.log('this in success', this)
         this.setState({
           gifs: data
         })
-        console.log('please work!', this.state.gifs)
+        console.log('successful gifs:', this.state.gifs)
       }.bind(this),
       error: function(error) {
         console.log('error from handleSearch!', error)
       }
     });
+  }
 
+  handleFavoriteGif(event) {
+    console.log('hi from favoriteGifHandler: ', event)
   }
 
   componentDidMount() {
@@ -69,9 +65,9 @@ class App extends React.Component {
 
   render () {
     return (<div>
-      <h1><strong>GIF</strong>eelMe</h1>
+      <h1>GIFeelMe</h1>
       <Search handleSearch={this.handleSearch} handleChange={this.handleChange}/>
-      <List gifs={this.state.gifs}/>
+      <List handleFavoriteGif={this.handleFavoriteGif} gifs={this.state.gifs}/>
     </div>)
   }
 }
